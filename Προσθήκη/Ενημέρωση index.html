@@ -1,0 +1,180 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Τα Πάντα Όλα</title>
+  <style>
+    body { font-family: sans-serif; margin: 0; padding: 0; background: #f4f4f4; }
+    header { background: #222; color: white; padding: 1rem; text-align: center; }
+    nav { background: #444; padding: 0.5rem; text-align: center; }
+    nav a { color: white; margin: 0 1rem; text-decoration: none; }
+    .products { display: grid; grid-template-columns: repeat(auto-fill, minmax(200px, 1fr)); gap: 1rem; padding: 1rem; }
+    .product { background: white; padding: 1rem; border-radius: 8px; box-shadow: 0 0 10px rgba(0,0,0,0.1); }
+    .product img { width: 100%; border-radius: 4px; }
+    .cart { position: fixed; top: 1rem; right: 1rem; background: #fff; padding: 1rem; border: 1px solid #ccc; max-width: 300px; z-index: 10; }
+    .checkout, #paypal-button-container { margin-top: 1rem; width: 100%; }
+    .admin { padding: 1rem; }
+    footer { text-align: center; padding: 1rem; background: #222; color: white; margin-top: 2rem; }
+
+    /* Responsive */
+    @media (max-width: 768px) {
+      .products { grid-template-columns: 1fr; }
+      .cart { position: static; max-width: 100%; border: none; margin: 1rem; }
+    }
+
+    .thank-you { display: none; text-align: center; padding: 2rem; background: #dff0d8; margin: 1rem; border: 1px solid #d0e9c6; border-radius: 8px; }
+  </style>
+  <script src="https://www.paypal.com/sdk/js?client-id=sb&currency=EUR"></script>
+</head>
+<body>
+  <header>
+    <h1>Τα Πάντα Όλα</h1>
+    <p>Gadgets, Αξεσουάρ Σπιτιού, Ρολόγια και άλλα πολλά!</p>
+  </header>
+
+  <nav>
+    <a href="#">Αρχική</a>
+    <a href="#products">Προϊόντα</a>
+    <a href="#admin">Διαχείριση</a>
+  </nav>
+
+  <div class="cart" id="cart">
+    <h3>Καλάθι</h3>
+    <ul id="cartItems"></ul>
+    <strong>Σύνολο: €<span id="total">0.00</span></strong><br/>
+    <div id="paypal-button-container"></div>
+  </div>
+
+  <section class="thank-you" id="thankYou">
+    <h2>Ευχαριστούμε για την παραγγελία σας!</h2>
+    <p>Θα λάβετε σύντομα επιβεβαίωση μέσω email.</p>
+  </section>
+
+  <section class="products" id="products">
+    <div class="product">
+      <img src="https://via.placeholder.com/200x150?text=Smartwatch" alt="Smartwatch">
+      <h4>Smartwatch</h4>
+      <p>€39.99</p>
+      <button onclick="addToCart('Smartwatch', 39.99)">Προσθήκη</button>
+    </div>
+    <div class="product">
+      <img src="https://via.placeholder.com/200x150?text=Λάμπα+LED" alt="LED Lamp">
+      <h4>Λάμπα LED</h4>
+      <p>€15.50</p>
+      <button onclick="addToCart('Λάμπα LED', 15.50)">Προσθήκη</button>
+    </div>
+    <div class="product">
+      <img src="https://via.placeholder.com/200x150?text=Γυαλιά+Ηλίου" alt="Γυαλιά Ηλίου">
+      <h4>Γυαλιά Ηλίου</h4>
+      <p>€25.00</p>
+      <button onclick="addToCart('Γυαλιά Ηλίου', 25.00)">Προσθήκη</button>
+    </div>
+
+    <!-- Προϊόντα AliExpress -->
+    <div class="product">
+      <img src="https://ae01.alicdn.com/kf/SampleImage1.jpg" alt="Φορητός Φορτιστής">
+      <h4>Φορητός Φορτιστής AliExpress</h4>
+      <p>€18.90</p>
+      <a href="https://www.aliexpress.com/item/sample1.html" target="_blank" rel="noopener noreferrer">
+        <button>Αγορά από AliExpress</button>
+      </a>
+    </div>
+    <div class="product">
+      <img src="https://ae01.alicdn.com/kf/SampleImage2.jpg" alt="Bluetooth Ακουστικά">
+      <h4>Bluetooth Ακουστικά AliExpress</h4>
+      <p>€22.50</p>
+      <a href="https://www.aliexpress.com/item/sample2.html" target="_blank" rel="noopener noreferrer">
+        <button>Αγορά από AliExpress</button>
+      </a>
+    </div>
+
+    <!-- Προϊόντα Amazon -->
+    <div class="product">
+      <img src="https://images-na.ssl-images-amazon.com/images/I/sampleimage1.jpg" alt="Ηλεκτρική Οδοντόβουρτσα">
+      <h4>Ηλεκτρική Οδοντόβουρτσα Amazon</h4>
+      <p>€45.00</p>
+      <a href="https://www.amazon.com/dp/sample1" target="_blank" rel="noopener noreferrer">
+        <button>Αγορά από Amazon</button>
+      </a>
+    </div>
+    <div class="product">
+      <img src="https://images-na.ssl-images-amazon.com/images/I/sampleimage2.jpg" alt="Smart Home Sensor">
+      <h4>Smart Home Sensor Amazon</h4>
+      <p>€35.00</p>
+      <a href="https://www.amazon.com/dp/sample2" target="_blank" rel="noopener noreferrer">
+        <button>Αγορά από Amazon</button>
+      </a>
+    </div>
+  </section>
+
+  <section class="admin" id="admin">
+    <h2>Διαχείριση Παραγγελιών (Demo)</h2>
+    <ul id="orderList"></ul>
+  </section>
+
+  <footer>
+    <p>&copy; 2025 Τα Πάντα Όλα. All rights reserved.</p>
+  </footer>
+
+  <script>
+    let cart = [];
+
+    function addToCart(name, price) {
+      cart.push({ name, price });
+      updateCart();
+    }
+
+    function updateCart() {
+      const cartItems = document.getElementById('cartItems');
+      const total = document.getElementById('total');
+      cartItems.innerHTML = '';
+      let totalPrice = 0;
+      cart.forEach(item => {
+        const li = document.createElement('li');
+        li.textContent = `${item.name} - €${item.price.toFixed(2)}`;
+        cartItems.appendChild(li);
+        totalPrice += item.price;
+      });
+      total.textContent = totalPrice.toFixed(2);
+    }
+
+    function sendConfirmationEmail(orderDetails) {
+      console.log('Αποστολή email με τα στοιχεία:', orderDetails);
+      // Προσθήκη πραγματικής αποστολής email μέσω backend/API
+    }
+
+    paypal.Buttons({
+      createOrder: function(data, actions) {
+        const totalPrice = cart.reduce((a, b) => a + b.price, 0);
+        return actions.order.create({
+          purchase_units: [{
+            amount: {
+              value: totalPrice.toFixed(2)
+            }
+          }]
+        });
+      },
+      onApprove: function(data, actions) {
+        return actions.order.capture().then(function(details) {
+          alert('Η πληρωμή ολοκληρώθηκε από ' + details.payer.name.given_name);
+          const orderList = document.getElementById('orderList');
+          const li = document.createElement('li');
+          const summary = `Παραγγελία: ${cart.map(i => i.name).join(', ')} | Πληρώθηκε: €${cart.reduce((a,b)=>a+b.price,0).toFixed(2)}`;
+          li.textContent = summary;
+          orderList.appendChild(li);
+          sendConfirmationEmail(summary);
+          cart = [];
+          updateCart();
+          document.getElementById('thankYou').style.display = 'block';
+          window.scrollTo({ top: document.getElementById('thankYou').offsetTop, behavior: 'smooth' });
+        });
+      },
+      onError: function(err) {
+        console.error(err);
+        alert('Παρουσιάστηκε σφάλμα στην πληρωμή.');
+      }
+    }).render('#paypal-button-container');
+  </script>
+</body>
+</html>
